@@ -1,0 +1,1 @@
+staticcheck is go vet on steroids, applying a ton of static analysis checks you might be used to from tools like ReSharper for C#.[Learn more](https://github.com/dominikh/go-tools/tree/master/cmd/staticcheck)

@@ -1,0 +1,9 @@
+{
+  "name" : "Staticcheck",
+  "version" : "1.0.0",
+  "patterns" : [ {
+    "patternId" : "SA9003",
+    "level" : "Info",
+    "category" : "UnusedCode"
+  }]
+}
