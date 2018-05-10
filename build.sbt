@@ -69,6 +69,8 @@ daemonGroup in Docker := dockerGroup
 
 dockerBaseImage := "develar/java"
 
+mainClass in Compile := Some("codacy.Engine")
+
 dockerCommands := {
   dockerCommands.dependsOn(toolVersion).value.flatMap {
     case cmd@(Cmd("ADD", _)) => List(
