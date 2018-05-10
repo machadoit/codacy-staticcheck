@@ -46,6 +46,8 @@ def installAll(toolVersion: String) =
      |export GOPATH=/opt/docker/go &&
      |wget -qO- https://dl.google.com/go/go1.10.2.linux-amd64.tar.gz | tar xvz -C /usr/local &&
      |/usr/local/go/bin/go get -u honnef.co/go/tools/cmd/staticcheck &&
+     |(cd $$GOPATH/src/honnef.co/go/tools && git checkout $toolVersion) &&
+     |/usr/local/go/bin/go get honnef.co/go/tools/cmd/staticcheck &&
      |rm -rf /tmp/*""".stripMargin.replaceAll(System.lineSeparator(), " ")
 
 mappings in Universal <++= (resourceDirectory in Compile) map { (resourceDir: File) =>

@@ -1,6 +1,6 @@
 {
   "name" : "Staticcheck",
-  "version" : "1.0.0",
+  "version" : "2017.2.2",
   "patterns" : [ {
     "patternId" : "SA9003",
     "level" : "Info",
