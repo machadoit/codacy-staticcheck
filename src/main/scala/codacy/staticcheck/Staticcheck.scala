@@ -34,7 +34,7 @@ object Staticcheck extends Tool {
       val command = List("/opt/docker/go/bin/staticcheck", "-f", "json") ++ ignorePatternsCmd
 
       CommandRunner.exec(command, Some(new java.io.File(source.path))) match {
-        case Right(resultFromTool) =>
+        case Right(resultFromTool) if resultFromTool.stderr.isEmpty =>
           withResultsFilter(patternsToLintSet, filesOpt)(parseToolResult(resultFromTool.stdout)) match {
             case s@Success(_) => s
             case Failure(e) =>
@@ -55,6 +55,22 @@ object Staticcheck extends Tool {
               Failure(new Exception(msg))
           }
 
+        case Right(resultFromTool) =>
+          val msg =
+            s"""
+               |Staticcheck exited with code ${resultFromTool.exitCode} with output on the stderr
+               |stdout: ${
+              resultFromTool.stdout.mkString(
+                Properties.lineSeparator)
+            }
+               |stderr: ${
+              resultFromTool.stderr.mkString(
+                Properties.lineSeparator)
+            }
+                """.stripMargin
+
+          Failure(new Exception(msg))
+
         case Left(e) =>
           Failure(e)
       }
@@ -63,22 +79,24 @@ object Staticcheck extends Tool {
   }
 
   private def parseToolResult(resultsFromTool: List[String]): Try[List[Result]] = {
-    val results: List[Try[Result]] = resultsFromTool.map { resultRaw =>
-      Json.parse(resultRaw).validate[ToolNativeResult] match {
-        case JsSuccess(nativeResult, _) => Success(toResult(nativeResult))
-        case JsError(errors) =>
-          val msg =
-            s"""Error parsing native results to docker tool results:
-               |${errors.mkString(System.lineSeparator)}""".stripMargin
-          Failure(new Exception(msg))
+    Try {
+      val results: List[Try[Result]] = resultsFromTool.map { resultRaw =>
+        Json.parse(resultRaw).validate[ToolNativeResult] match {
+          case JsSuccess(nativeResult, _) => Success(toResult(nativeResult))
+          case JsError(errors) =>
+            val msg =
+              s"""Error parsing native results to docker tool results:
+                 |${errors.mkString(System.lineSeparator)}""".stripMargin
+            Failure(new Exception(msg))
+        }
       }
-    }
 
-    val maybeFailure: Option[Try[Result]] = results.find(_.isFailure)
+      val maybeFailure: Option[Try[Result]] = results.find(_.isFailure)
 
-    maybeFailure.fold[Try[List[Result]]](Success(results.flatMap(_.toOption))) { failure =>
-      failure.map(List(_))
-    }
+      maybeFailure.fold[Try[List[Result]]](Success(results.flatMap(_.toOption))) { failure =>
+        failure.map(List(_))
+      }
+    }.flatten
   }
 
   private def withResultsFilter(patternsToLint: Set[Pattern.Id], filesOpt: Option[Set[api.Source.File]])
