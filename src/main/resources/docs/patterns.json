@@ -175,8 +175,8 @@
     "category" : "CodeStyle"
   }, {
     "patternId" : "SA9003",
-    "level" : "Error",
-    "category" : "CodeStyle"
+    "level" : "Info",
+    "category" : "UnusedCode"
   }, {
     "patternId" : "SA4009",
     "level" : "Info",

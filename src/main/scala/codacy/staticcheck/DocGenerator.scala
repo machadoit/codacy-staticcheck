@@ -30,6 +30,8 @@ object DocGenerator {
   private def generatePatterns(rules: Seq[PatternInfo]): JsArray = {
     val codacyPatterns = rules.collect { case rule =>
       val (category, level) = rule.patternId match {
+        case patternId if patternId.startsWith("SA9003") =>
+          ("UnusedCode", "Info")
         case patternId if patternId.startsWith("SA1") =>
           ("CodeStyle", "Info")
         case patternId if patternId.startsWith("SA2") =>

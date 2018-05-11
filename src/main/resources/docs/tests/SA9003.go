@@ -7,6 +7,6 @@ func main() {
 
     if 7%2 == 0 {
         fmt.Println("potato")
-        //#Error: SA9003
+        //#Info: SA9003
     } else { }
 }
