@@ -4,7 +4,8 @@ This is the docker engine we use at Codacy to have [Staticcheck](https://github.
 You can also create a docker to integrate the tool and language of your choice!
 Check the **Docs** section for more information.
 
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/d4f05ad960c44fcaa7d151b9bcbbbe01)](https://www.codacy.com/app/machadoit/codacy-staticcheck?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=machadoit/codacy-staticcheck&amp;utm_campaign=Badge_Grade)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/a4ec667e01894a4890d561968428c828)](https://www.codacy.com/app/Codacy/codacy-staticcheck?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=codacy/codacy-staticcheck&amp;utm_campaign=Badge_Grade)
+[![CircleCI](https://circleci.com/gh/codacy/codacy-staticcheck.svg?style=shield&circle-token=:circle-token)](https://circleci.com/gh/codacy/codacy-staticcheck)
 
 ## Usage
 
@@ -32,6 +33,15 @@ We use the [codacy-plugins-test](https://github.com/codacy/codacy-plugins-test) 
 You can follow the instructions there to make sure your tool is working as expected.
 
 ## Generate Docs
+
+Make sure that you have the ```raw-docs``` for the version that you want to target.
+For example, to generate documentation for version ```2017.2.2```, the underlying tool documentation must be available at ```src/main/resources/raw-docks/2017.2.2```.
+
+Using the version ```2017.2.2``` as example, you should copy all the files
+from ```https://github.com/dominikh/go-tools/tree/2017.2.2/cmd/staticcheck/docs/checks```
+to the ```src/main/resources/raw-docks/2017.2.2```.
+
+As long as the ```raw-docs``` are available, running the command above will generate the ```patterns.json``` and ```description.json```:
 
 ```sh
 sbt "run-main codacy.staticcheck.DocGenerator <version-of-the-tool>"
