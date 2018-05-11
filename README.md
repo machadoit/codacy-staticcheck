@@ -33,6 +33,15 @@ You can follow the instructions there to make sure your tool is working as expec
 
 ## Generate Docs
 
+Make sure that you have the ```raw-docs``` for the version that you want to target.
+For example, to generate documentation for version ```2017.2.2```, the underlying tool documentation must be available at ```src/main/resources/raw-docks/2017.2.2```.
+
+Using the version ```2017.2.2``` as example, you should copy all the files
+from ```https://github.com/dominikh/go-tools/tree/2017.2.2/cmd/staticcheck/docs/checks```
+to the ```src/main/resources/raw-docks/2017.2.2```.
+
+As long as the ```raw-docs``` are available, running the command above will generate the ```patterns.json``` and ```description.json```:
+
 ```sh
 sbt "run-main codacy.staticcheck.DocGenerator <version-of-the-tool>"
 ```
