@@ -35,7 +35,7 @@ object Staticcheck extends Tool {
 
       CommandRunner.exec(command, Some(new java.io.File(source.path))) match {
         case Right(resultFromTool) if resultFromTool.stderr.isEmpty =>
-          withResultsFilter(patternsToLintSet, filesOpt)(parseToolResult(resultFromTool.stdout)) match {
+          parseToolResult(resultFromTool.stdout).map(_.filter(result => resultFilter(result, patternsToLintSet, filesOpt))) match {
             case s@Success(_) => s
             case Failure(e) =>
               val msg =
@@ -99,32 +99,20 @@ object Staticcheck extends Tool {
     }.flatten
   }
 
-  private def withResultsFilter(patternsToLint: Set[Pattern.Id], filesOpt: Option[Set[api.Source.File]])
-                               (body: => Try[List[Result]]): Try[List[Result]] = {
-    filesOpt.fold(body) { filesAllowed =>
-      body.map { results =>
-        results.flatMap(result => withResultFileFilter(result, filesAllowed))
-      }
-    }.map { results =>
-      results.flatMap(result => withResultPatternFilter(result, patternsToLint))
+  private def resultFilter(result: Result, patternsToLintSet: Set[Pattern.Id], filesOpt: Option[Set[Source.File]]): Boolean = {
+    def patternFilter(patternId: Pattern.Id): Boolean = {
+      patternsToLintSet.contains(patternId)
     }
-  }
 
-  private def withResultFileFilter(result: Result, filesAllowed: Set[api.Source.File]): Option[Result] = {
-    result match {
-      case Issue(file, _, _, _) if !filesAllowed.exists(allowedFile => allowedFile.path == file.path) =>
-        None
-      case _ =>
-        Some(result)
+    def fileFilter(file: Source.File): Boolean = {
+      filesOpt.exists(_.contains(file))
     }
-  }
 
-  private def withResultPatternFilter(result: Result, patternsToLint: Set[Pattern.Id]): Option[Result] = {
     result match {
-      case Issue(_, _, patternId, _) if !patternsToLint.exists(allowedPattern => allowedPattern.value == patternId.value) =>
-        None
+      case Issue(file, _, patternId, _) =>
+        patternFilter(patternId) && fileFilter(file)
       case _ =>
-        Some(result)
+        true
     }
   }
 
