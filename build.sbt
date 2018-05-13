@@ -42,12 +42,16 @@ toolVersion := {
 }
 
 def installAll(toolVersion: String) =
-  s"""apk update && apk add bash curl git &&
+  s"""apk --no-cache add bash git go musl-dev &&
      |export GOPATH=/opt/docker/go &&
-     |wget -qO- https://dl.google.com/go/go1.10.2.linux-amd64.tar.gz | tar xvz -C /usr/local &&
-     |/usr/local/go/bin/go get -u honnef.co/go/tools/cmd/staticcheck &&
+     |go get -u honnef.co/go/tools/cmd/staticcheck &&
      |(cd $$GOPATH/src/honnef.co/go/tools && git checkout $toolVersion) &&
-     |/usr/local/go/bin/go get honnef.co/go/tools/cmd/staticcheck &&
+     |go get honnef.co/go/tools/cmd/staticcheck &&
+     |rm -rf /usr/lib/go/pkg &&
+     |rm -rf $$GOPATH/pkg &&
+     |rm -rf $$GOPATH/src &&
+     |apk del git musl-dev &&
+     |rm -rf /var/cache/apk/* &&
      |rm -rf /tmp/*""".stripMargin.replaceAll(System.lineSeparator(), " ")
 
 mappings in Universal <++= (resourceDirectory in Compile) map { (resourceDir: File) =>
@@ -67,7 +71,7 @@ daemonUser in Docker := dockerUser
 
 daemonGroup in Docker := dockerGroup
 
-dockerBaseImage := "develar/java"
+dockerBaseImage := "openjdk:8-jre-alpine"
 
 mainClass in Compile := Some("codacy.Engine")
 
