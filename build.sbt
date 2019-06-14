@@ -31,8 +31,7 @@ version in Docker := "1.0"
 
 organization := "com.codacy"
 
-lazy val toolVersion = TaskKey[String](
-  "Retrieve the version of the underlying tool from patterns.json")
+lazy val toolVersion = TaskKey[String]("Retrieve the version of the underlying tool from patterns.json")
 
 toolVersion := {
   val jsonFile = (resourceDirectory in Compile).value / "docs" / "patterns.json"
@@ -40,9 +39,7 @@ toolVersion := {
     .parseFull(Source.fromFile(jsonFile).getLines().mkString)
     .getOrElse(throw new Exception("patterns.json is not a valid json"))
     .asInstanceOf[Map[String, String]]
-  toolMap.getOrElse[String](
-    "version",
-    throw new Exception("Failed to retrieve 'version' from patterns.json"))
+  toolMap.getOrElse[String]("version", throw new Exception("Failed to retrieve 'version' from patterns.json"))
 }
 
 def installAll(toolVersion: String) =
@@ -58,15 +55,14 @@ def installAll(toolVersion: String) =
      |rm -rf /var/cache/apk/* &&
      |rm -rf /tmp/*""".stripMargin.replaceAll(System.lineSeparator(), " ")
 
-mappings in Universal <++= (resourceDirectory in Compile) map {
-  (resourceDir: File) =>
-    val src = resourceDir / "docs"
-    val dest = "/docs"
+mappings in Universal <++= (resourceDirectory in Compile) map { (resourceDir: File) =>
+  val src = resourceDir / "docs"
+  val dest = "/docs"
 
-    for {
-      path <- (src ***).get
-      if !path.isDirectory
-    } yield path -> path.toString.replaceFirst(src.toString, dest)
+  for {
+    path <- (src ***).get
+    if !path.isDirectory
+  } yield path -> path.toString.replaceFirst(src.toString, dest)
 }
 
 val dockerUser = "docker"
@@ -88,8 +84,7 @@ dockerCommands := {
         cmd,
         Cmd("RUN", installAll(toolVersion.value)),
         Cmd("RUN", "mv /opt/docker/docs /docs"),
-        ExecCmd("RUN",
-                Seq("chown", "-R", s"$dockerUser:$dockerGroup", "/docs"): _*)
+        ExecCmd("RUN", Seq("chown", "-R", s"$dockerUser:$dockerGroup", "/docs"): _*)
       )
     case other => List(other)
   }
