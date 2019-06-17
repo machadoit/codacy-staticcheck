@@ -1,6 +1,6 @@
 package codacy
 
-import codacy.dockerApi.DockerEngine
 import codacy.staticcheck.Staticcheck
+import com.codacy.tools.scala.seed.DockerEngine
 
-object Engine extends DockerEngine(Staticcheck)
+object Engine extends DockerEngine(Staticcheck)()

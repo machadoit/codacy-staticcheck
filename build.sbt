@@ -9,7 +9,7 @@ name := "codacy-staticcheck"
 
 version := "1.0-SNAPSHOT"
 
-val languageVersion = "2.11.12"
+val languageVersion = "2.12.7"
 
 scalaVersion := languageVersion
 
@@ -19,8 +19,8 @@ resolvers ++= Seq(
 )
 
 libraryDependencies ++= Seq(
-  "com.codacy" %% "codacy-engine-scala-seed" % "2.7.7" withSources(),
-  "org.scala-lang.modules" %% "scala-xml" % "1.0.4" withSources()
+  "com.codacy" %% "codacy-engine-scala-seed" % "3.0.9" withSources (),
+  "org.scala-lang.modules" %% "scala-xml" % "1.0.6" withSources ()
 )
 
 enablePlugins(JavaAppPackaging)
@@ -35,7 +35,8 @@ lazy val toolVersion = TaskKey[String]("Retrieve the version of the underlying t
 
 toolVersion := {
   val jsonFile = (resourceDirectory in Compile).value / "docs" / "patterns.json"
-  val toolMap = JSON.parseFull(Source.fromFile(jsonFile).getLines().mkString)
+  val toolMap = JSON
+    .parseFull(Source.fromFile(jsonFile).getLines().mkString)
     .getOrElse(throw new Exception("patterns.json is not a valid json"))
     .asInstanceOf[Map[String, String]]
   toolMap.getOrElse[String]("version", throw new Exception("Failed to retrieve 'version' from patterns.json"))
@@ -77,13 +78,14 @@ mainClass in Compile := Some("codacy.Engine")
 
 dockerCommands := {
   dockerCommands.dependsOn(toolVersion).value.flatMap {
-    case cmd@(Cmd("ADD", _)) => List(
-      Cmd("RUN", "adduser -u 2004 -D docker"),
-      cmd,
-      Cmd("RUN", installAll(toolVersion.value)),
-      Cmd("RUN", "mv /opt/docker/docs /docs"),
-      ExecCmd("RUN", Seq("chown", "-R", s"$dockerUser:$dockerGroup", "/docs"): _*)
-    )
+    case cmd @ (Cmd("ADD", _)) =>
+      List(
+        Cmd("RUN", "adduser -u 2004 -D docker"),
+        cmd,
+        Cmd("RUN", installAll(toolVersion.value)),
+        Cmd("RUN", "mv /opt/docker/docs /docs"),
+        ExecCmd("RUN", Seq("chown", "-R", s"$dockerUser:$dockerGroup", "/docs"): _*)
+      )
     case other => List(other)
   }
 }

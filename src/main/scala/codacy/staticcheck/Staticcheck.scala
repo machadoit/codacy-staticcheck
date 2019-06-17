@@ -1,27 +1,31 @@
 package codacy.staticcheck
 
-import codacy.docker.api
-import codacy.docker.api.Result.Issue
-import codacy.docker.api._
-import codacy.docker.api.utils.ToolHelper
-import codacy.dockerApi.utils.CommandRunner
+import com.codacy.plugins.api.{Options, Source}
+import com.codacy.plugins.api.results.Result.Issue
+import com.codacy.plugins.api.results.{Parameter, Pattern, Result, Tool}
+import com.codacy.tools.scala.seed.utils.CommandRunner
+import com.codacy.tools.scala.seed.utils.ToolHelper._
 import play.api.libs.json.{JsError, JsSuccess, Json}
 
 import scala.util.{Failure, Properties, Success, Try}
 
 object Staticcheck extends Tool {
 
-  override def apply(source: api.Source.Directory,
-                     configuration: Option[List[Pattern.Definition]],
-                     filesOpt: Option[Set[api.Source.File]])(
-                      implicit specification: Tool.Specification): Try[List[Result]] = {
+  override def apply(
+      source: Source.Directory,
+      configuration: Option[List[Pattern.Definition]],
+      files: Option[Set[Source.File]],
+      options: Map[Options.Key, Options.Value]
+  )(implicit specification: Tool.Specification): Try[List[Result]] = {
 
-    val patternsToLintOpt: Option[List[Pattern.Definition]] =
-      ToolHelper.patternsToLint(configuration)
+    val patternsToLintOpt: Option[List[Pattern.Definition]] = configuration.withDefaultParameters
 
     patternsToLintOpt.fold[Try[List[Result]]](Success(List.empty[Result])) { patternsToLint =>
-
-      val patternsToLintSet: Set[Pattern.Id] = patternsToLint.map(_.patternId)(collection.breakOut[List[Pattern.Definition], Pattern.Id, Set[Pattern.Id]])
+      val patternsToLintSet: Set[Pattern.Id] =
+        patternsToLint.map(_.patternId)(
+          collection
+            .breakOut[List[Pattern.Definition], Pattern.Id, Set[Pattern.Id]]
+        )
 
       val patternsToIgnore: Set[Pattern.Id] = specification.patterns.map(_.patternId) diff patternsToLintSet
 
@@ -35,22 +39,17 @@ object Staticcheck extends Tool {
 
       CommandRunner.exec(command, Some(new java.io.File(source.path))) match {
         case Right(resultFromTool) if resultFromTool.stderr.isEmpty =>
-          parseToolResult(resultFromTool.stdout).map(_.filter(result => resultFilter(result, patternsToLintSet, filesOpt))) match {
-            case s@Success(_) => s
+          parseToolResult(resultFromTool.stdout)
+            .map(_.filter(result => resultFilter(result, patternsToLintSet, files))) match {
+            case s @ Success(_) => s
             case Failure(e) =>
               val msg =
                 s"""
-                   |${e.getStackTrace.mkString(System.lineSeparator)}
-                   |Staticcheck exited with code ${resultFromTool.exitCode}
-                   |message: ${e.getMessage}
-                   |stdout: ${
-                  resultFromTool.stdout.mkString(
-                    Properties.lineSeparator)
-                }
-                   |stderr: ${
-                  resultFromTool.stderr.mkString(
-                    Properties.lineSeparator)
-                }
+                     |${e.getStackTrace.mkString(System.lineSeparator)}
+                     |Staticcheck exited with code ${resultFromTool.exitCode}
+                     |message: ${e.getMessage}
+                     |stdout: ${resultFromTool.stdout.mkString(Properties.lineSeparator)}
+                     |stderr: ${resultFromTool.stderr.mkString(Properties.lineSeparator)}
                 """.stripMargin
               Failure(new Exception(msg))
           }
@@ -58,15 +57,9 @@ object Staticcheck extends Tool {
         case Right(resultFromTool) =>
           val msg =
             s"""
-               |Staticcheck exited with code ${resultFromTool.exitCode} with output on the stderr
-               |stdout: ${
-              resultFromTool.stdout.mkString(
-                Properties.lineSeparator)
-            }
-               |stderr: ${
-              resultFromTool.stderr.mkString(
-                Properties.lineSeparator)
-            }
+                 |Staticcheck exited with code ${resultFromTool.exitCode} with output on the stderr
+                 |stdout: ${resultFromTool.stdout.mkString(Properties.lineSeparator)}
+                 |stderr: ${resultFromTool.stderr.mkString(Properties.lineSeparator)}
                 """.stripMargin
 
           Failure(new Exception(msg))
@@ -74,7 +67,6 @@ object Staticcheck extends Tool {
         case Left(e) =>
           Failure(e)
       }
-
     }
   }
 
@@ -99,7 +91,11 @@ object Staticcheck extends Tool {
     }.flatten
   }
 
-  private def resultFilter(result: Result, patternsToLintSet: Set[Pattern.Id], filesOpt: Option[Set[Source.File]]): Boolean = {
+  private def resultFilter(
+      result: Result,
+      patternsToLintSet: Set[Pattern.Id],
+      filesOpt: Option[Set[Source.File]]
+  ): Boolean = {
     def patternFilter(patternId: Pattern.Id): Boolean = {
       patternsToLintSet.contains(patternId)
     }
@@ -117,7 +113,11 @@ object Staticcheck extends Tool {
   }
 
   private def toResult(nativeResult: ToolNativeResult): Result = {
-    Result.Issue(api.Source.File(nativeResult.location.file), Result.Message(nativeResult.message),
-      Pattern.Id(nativeResult.code), api.Source.Line(nativeResult.location.line))
+    Result.Issue(
+      Source.File(nativeResult.location.file),
+      Result.Message(nativeResult.message),
+      Pattern.Id(nativeResult.code),
+      Source.Line(nativeResult.location.line)
+    )
   }
 }

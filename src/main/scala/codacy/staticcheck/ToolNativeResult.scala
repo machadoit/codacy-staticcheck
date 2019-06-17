@@ -13,4 +13,3 @@ object ToolNativeLocation {
 object ToolNativeResult {
   implicit lazy val fmt = Json.format[ToolNativeResult]
 }
-
