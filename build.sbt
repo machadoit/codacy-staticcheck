@@ -1,4 +1,4 @@
-import com.typesafe.sbt.packager.docker.{Cmd, ExecCmd}
+import com.typesafe.sbt.packager.docker.Cmd
 
 import scala.io.Source
 import scala.util.parsing.json.JSON
@@ -14,7 +14,7 @@ val languageVersion = "2.12.7"
 scalaVersion := languageVersion
 
 libraryDependencies ++= Seq(
-  "com.codacy" %% "codacy-engine-scala-seed" % "3.1.0" withSources (),
+  "com.codacy" %% "codacy-engine-scala-seed" % "4.0.0" withSources (),
   "org.scala-lang.modules" %% "scala-xml" % "1.2.0" withSources ()
 )
 
