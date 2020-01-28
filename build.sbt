@@ -1,4 +1,4 @@
-import com.typesafe.sbt.packager.docker.{Cmd, ExecCmd}
+import com.typesafe.sbt.packager.docker.Cmd
 
 import scala.io.Source
 import scala.util.parsing.json.JSON
@@ -13,14 +13,9 @@ val languageVersion = "2.12.7"
 
 scalaVersion := languageVersion
 
-resolvers ++= Seq(
-  "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/releases",
-  "Typesafe Repo" at "http://repo.typesafe.com/typesafe/releases/"
-)
-
 libraryDependencies ++= Seq(
-  "com.codacy" %% "codacy-engine-scala-seed" % "3.0.9" withSources (),
-  "org.scala-lang.modules" %% "scala-xml" % "1.0.6" withSources ()
+  "com.codacy" %% "codacy-engine-scala-seed" % "4.0.0" withSources (),
+  "org.scala-lang.modules" %% "scala-xml" % "1.2.0" withSources ()
 )
 
 enablePlugins(JavaAppPackaging)
@@ -31,7 +26,7 @@ version in Docker := "1.0"
 
 organization := "com.codacy"
 
-lazy val toolVersion = TaskKey[String]("Retrieve the version of the underlying tool from patterns.json")
+lazy val toolVersion = taskKey[String]("Retrieve the version of the underlying tool from patterns.json")
 
 toolVersion := {
   val jsonFile = (resourceDirectory in Compile).value / "docs" / "patterns.json"
@@ -55,15 +50,14 @@ def installAll(toolVersion: String) =
      |rm -rf /var/cache/apk/* &&
      |rm -rf /tmp/*""".stripMargin.replaceAll(System.lineSeparator(), " ")
 
-mappings in Universal <++= (resourceDirectory in Compile) map { (resourceDir: File) =>
+mappings in Universal ++= (resourceDirectory in Compile).map { resourceDir =>
   val src = resourceDir / "docs"
   val dest = "/docs"
 
   for {
-    path <- (src ***).get
-    if !path.isDirectory
+    path <- src.allPaths.get if !path.isDirectory
   } yield path -> path.toString.replaceFirst(src.toString, dest)
-}
+}.value
 
 val dockerUser = "docker"
 val dockerGroup = "docker"
@@ -84,7 +78,7 @@ dockerCommands := {
         cmd,
         Cmd("RUN", installAll(toolVersion.value)),
         Cmd("RUN", "mv /opt/docker/docs /docs"),
-        ExecCmd("RUN", Seq("chown", "-R", s"$dockerUser:$dockerGroup", "/docs"): _*)
+        Cmd("RUN", s"chown -R $dockerUser:$dockerGroup /docs")
       )
     case other => List(other)
   }

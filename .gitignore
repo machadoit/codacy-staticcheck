@@ -12,3 +12,4 @@
 *.sc
 
 .vscode
+.metals
