@@ -4,7 +4,7 @@ This is the docker engine we use at Codacy to have [Staticcheck](https://github.
 You can also create a docker to integrate the tool and language of your choice!
 Check the **Docs** section for more information.
 
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/a4ec667e01894a4890d561968428c828)](https://www.codacy.com/app/Codacy/codacy-staticcheck?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=codacy/codacy-staticcheck&amp;utm_campaign=Badge_Grade)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/a4ec667e01894a4890d561968428c828)](https://www.codacy.com/gh/codacy/codacy-staticcheck?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=codacy/codacy-staticcheck&amp;utm_campaign=Badge_Grade)
 [![CircleCI](https://circleci.com/gh/codacy/codacy-staticcheck.svg?style=shield&circle-token=:circle-token)](https://circleci.com/gh/codacy/codacy-staticcheck)
 
 ## Usage
