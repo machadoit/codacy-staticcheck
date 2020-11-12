@@ -3,83 +3,57 @@ import com.typesafe.sbt.packager.docker.Cmd
 import scala.io.Source
 import scala.util.parsing.json.JSON
 
-organization := "codacy"
-
 name := "codacy-staticcheck"
 
-version := "1.0-SNAPSHOT"
-
-val languageVersion = "2.12.7"
-
-scalaVersion := languageVersion
+ThisBuild / scalaVersion := "2.13.3"
 
 libraryDependencies ++= Seq(
-  "com.codacy" %% "codacy-engine-scala-seed" % "4.0.0" withSources (),
-  "org.scala-lang.modules" %% "scala-xml" % "1.2.0" withSources ()
+  "com.codacy" %% "codacy-engine-scala-seed" % "4.0.0",
+  "org.scala-lang.modules" %% "scala-xml" % "1.2.0",
+  "com.lihaoyi" %% "ujson" % "1.2.2",
+  "org.scalatest" %% "scalatest" % "3.2.0" % Test
 )
 
-enablePlugins(JavaAppPackaging)
+val staticcheckVersion = "2020.1.6"
 
-enablePlugins(DockerPlugin)
+dependsOn(shared)
 
-version in Docker := "1.0"
+lazy val shared = project
+  .settings(
+    libraryDependencies += "com.codacy" %% "codacy-analysis-cli-model" % "2.2.0"
+  )
 
-organization := "com.codacy"
+lazy val `doc-generator` = project
+  .settings(
+    Compile / sourceGenerators += Def.task {
+      val file = (Compile / sourceManaged).value / "codacy" / "staticcheck" / "Versions.scala"
+      IO.write(file, s"""package com.codacy.staticcheck
+                        |object Versions {
+                        |  val staticcheckVersion: String = "$staticcheckVersion"
+                        |}
+                        |""".stripMargin)
+      Seq(file)
+    }.taskValue,
+    libraryDependencies ++= Seq(
+      "com.github.pathikrit" %% "better-files" % "3.9.1",
+      "com.lihaoyi" %% "ujson" % "1.2.2",
+    )
+  )
+  .dependsOn(shared)
 
-lazy val toolVersion = taskKey[String]("Retrieve the version of the underlying tool from patterns.json")
+enablePlugins(GraalVMNativeImagePlugin)
 
-toolVersion := {
-  val jsonFile = (resourceDirectory in Compile).value / "docs" / "patterns.json"
-  val toolMap = JSON
-    .parseFull(Source.fromFile(jsonFile).getLines().mkString)
-    .getOrElse(throw new Exception("patterns.json is not a valid json"))
-    .asInstanceOf[Map[String, String]]
-  toolMap.getOrElse[String]("version", throw new Exception("Failed to retrieve 'version' from patterns.json"))
-}
+val graalVersion = "20.2.0-java11"
 
-def installAll(toolVersion: String) =
-  s"""apk --no-cache add bash git go musl-dev &&
-     |export GOPATH=/opt/docker/go &&
-     |go get -u honnef.co/go/tools/cmd/staticcheck &&
-     |(cd $$GOPATH/src/honnef.co/go/tools && git checkout $toolVersion) &&
-     |go get honnef.co/go/tools/cmd/staticcheck &&
-     |rm -rf /usr/lib/go/pkg &&
-     |rm -rf $$GOPATH/pkg &&
-     |rm -rf $$GOPATH/src &&
-     |apk del git musl-dev &&
-     |rm -rf /var/cache/apk/* &&
-     |rm -rf /tmp/*""".stripMargin.replaceAll(System.lineSeparator(), " ")
-
-mappings in Universal ++= (resourceDirectory in Compile).map { resourceDir =>
-  val src = resourceDir / "docs"
-  val dest = "/docs"
-
-  for {
-    path <- src.allPaths.get if !path.isDirectory
-  } yield path -> path.toString.replaceFirst(src.toString, dest)
-}.value
-
-val dockerUser = "docker"
-val dockerGroup = "docker"
-
-daemonUser in Docker := dockerUser
-
-daemonGroup in Docker := dockerGroup
-
-dockerBaseImage := "openjdk:8-jre-alpine"
-
-mainClass in Compile := Some("codacy.Engine")
-
-dockerCommands := {
-  dockerCommands.dependsOn(toolVersion).value.flatMap {
-    case cmd @ (Cmd("ADD", _)) =>
-      List(
-        Cmd("RUN", "adduser -u 2004 -D docker"),
-        cmd,
-        Cmd("RUN", installAll(toolVersion.value)),
-        Cmd("RUN", "mv /opt/docker/docs /docs"),
-        Cmd("RUN", s"chown -R $dockerUser:$dockerGroup /docs")
-      )
-    case other => List(other)
-  }
-}
+// Graal vm build options
+graalVMNativeImageGraalVersion := Some(graalVersion)
+containerBuildImage := Some(s"oracle/graalvm-ce:$graalVersion")
+graalVMNativeImageOptions ++= Seq(
+  "-O1",
+  "-H:+ReportExceptionStackTraces",
+  "--no-fallback",
+  "--no-server",
+  "--initialize-at-build-time",
+  "--report-unsupported-elements-at-runtime",
+  "--static"
+)
