@@ -43,17 +43,13 @@ lazy val `doc-generator` = project
 
 enablePlugins(GraalVMNativeImagePlugin)
 
-val graalVersion = "20.2.0-java11"
-
 // Graal vm build options
-graalVMNativeImageGraalVersion := Some(graalVersion)
-containerBuildImage := Some(s"oracle/graalvm-ce:$graalVersion")
+graalVMNativeImageGraalVersion := Some("21.0.0")
 graalVMNativeImageOptions ++= Seq(
   "-O1",
   "-H:+ReportExceptionStackTraces",
   "--no-fallback",
   "--no-server",
-  "--initialize-at-build-time",
   "--report-unsupported-elements-at-runtime",
   "--static"
 )
