@@ -1,3 +1,5 @@
 .vscode
 .metals
 target
+.idea
+.bloop

@@ -19,9 +19,7 @@ val staticcheckVersion = "2020.1.6"
 dependsOn(shared)
 
 lazy val shared = project
-  .settings(
-    libraryDependencies += "com.codacy" %% "codacy-analysis-cli-model" % "2.2.0"
-  )
+  .settings(libraryDependencies += "com.codacy" %% "codacy-analysis-cli-model" % "2.2.0")
 
 lazy val `doc-generator` = project
   .settings(
@@ -41,11 +39,9 @@ lazy val `doc-generator` = project
   )
   .dependsOn(shared)
 
-enablePlugins(GraalVMNativeImagePlugin)
+enablePlugins(NativeImagePlugin)
 
-// Graal vm build options
-graalVMNativeImageGraalVersion := Some("21.0.0")
-graalVMNativeImageOptions ++= Seq(
+nativeImageOptions ++= Seq(
   "-O1",
   "-H:+ReportExceptionStackTraces",
   "--no-fallback",
