@@ -31,8 +31,8 @@
   },
   {
     "patternId": "S1006",
-    "title": "Use for { ... } for infinite loops",
-    "description": "Use for { ... } for infinite loops"
+    "title": "Use 'for { ... }' for infinite loops",
+    "description": "Use 'for { ... }' for infinite loops"
   },
   {
     "patternId": "S1007",
@@ -76,13 +76,13 @@
   },
   {
     "patternId": "S1018",
-    "title": "Use copy for sliding elements",
-    "description": "Use copy for sliding elements"
+    "title": "Use 'copy' for sliding elements",
+    "description": "Use 'copy' for sliding elements"
   },
   {
     "patternId": "S1019",
-    "title": "Simplify make call by omitting redundant arguments",
-    "description": "Simplify make call by omitting redundant arguments"
+    "title": "Simplify 'make' call by omitting redundant arguments",
+    "description": "Simplify 'make' call by omitting redundant arguments"
   },
   {
     "patternId": "S1020",
@@ -136,8 +136,8 @@
   },
   {
     "patternId": "S1033",
-    "title": "Unnecessary guard around call to delete",
-    "description": "Unnecessary guard around call to delete"
+    "title": "Unnecessary guard around call to 'delete'",
+    "description": "Unnecessary guard around call to 'delete'"
   },
   {
     "patternId": "S1034",
@@ -168,6 +168,11 @@
     "patternId": "S1039",
     "title": "Unnecessary use of fmt.Sprint",
     "description": "Unnecessary use of fmt.Sprint"
+  },
+  {
+    "patternId": "S1040",
+    "title": "Type assertion to current type",
+    "description": "Type assertion to current type"
   },
   {
     "patternId": "SA1000",
@@ -221,8 +226,8 @@
   },
   {
     "patternId": "SA1011",
-    "title": "Various methods in the strings package expect valid UTF-8, but invalid input is provided",
-    "description": "Various methods in the strings package expect valid UTF-8, but invalid input is provided"
+    "title": "Various methods in the 'strings' package expect valid UTF-8, but invalid input is provided",
+    "description": "Various methods in the 'strings' package expect valid UTF-8, but invalid input is provided"
   },
   {
     "patternId": "SA1012",
@@ -310,6 +315,11 @@
     "description": "Inappropriate key in call to context.WithValue"
   },
   {
+    "patternId": "SA1030",
+    "title": "Invalid argument in call to a strconv function",
+    "description": "Invalid argument in call to a strconv function"
+  },
+  {
     "patternId": "SA2000",
     "title": "sync.WaitGroup.Add called inside the goroutine, leading to a race condition",
     "description": "sync.WaitGroup.Add called inside the goroutine, leading to a race condition"
@@ -341,8 +351,8 @@
   },
   {
     "patternId": "SA4000",
-    "title": "Boolean expression has identical expressions on both sides",
-    "description": "Boolean expression has identical expressions on both sides"
+    "title": "Binary operator has identical expressions on both sides",
+    "description": "Binary operator has identical expressions on both sides"
   },
   {
     "patternId": "SA4001",
@@ -431,13 +441,58 @@
   },
   {
     "patternId": "SA4021",
-    "title": "x = append(y) is equivalent to x = y",
-    "description": "x = append(y) is equivalent to x = y"
+    "title": "'x = append(y)' is equivalent to 'x = y'",
+    "description": "'x = append(y)' is equivalent to 'x = y'"
   },
   {
     "patternId": "SA4022",
     "title": "Comparing the address of a variable against nil",
     "description": "Comparing the address of a variable against nil"
+  },
+  {
+    "patternId": "SA4023",
+    "title": "Impossible comparison of interface value with untyped nil",
+    "description": "Impossible comparison of interface value with untyped nil"
+  },
+  {
+    "patternId": "SA4024",
+    "title": "Checking for impossible return value from a builtin function",
+    "description": "Checking for impossible return value from a builtin function"
+  },
+  {
+    "patternId": "SA4025",
+    "title": "Integer division of literals that results in zero",
+    "description": "Integer division of literals that results in zero"
+  },
+  {
+    "patternId": "SA4026",
+    "title": "Go constants cannot express negative zero",
+    "description": "Go constants cannot express negative zero"
+  },
+  {
+    "patternId": "SA4027",
+    "title": "(*net/url.URL).Query returns a copy, modifying it doesn't change the URL",
+    "description": "(*net/url.URL).Query returns a copy, modifying it doesn't change the URL"
+  },
+  {
+    "patternId": "SA4028",
+    "title": "x % 1 is always zero",
+    "description": "x % 1 is always zero"
+  },
+  {
+    "patternId": "SA4029",
+    "title": "Ineffective attempt at sorting slice",
+    "description": "Ineffective attempt at sorting slice"
+  },
+  {
+    "patternId": "SA4030",
+    "title": "Ineffective attempt at generating random number",
+    "description": "Ineffective attempt at generating random number"
+  },
+  {
+    "patternId": "SA4031",
+    "title": "Checking never-nil value against nil",
+    "description": "Checking never-nil value against nil"
   },
   {
     "patternId": "SA5000",
@@ -446,13 +501,13 @@
   },
   {
     "patternId": "SA5001",
-    "title": "Defering Close before checking for a possible error",
-    "description": "Defering Close before checking for a possible error"
+    "title": "Deferring Close before checking for a possible error",
+    "description": "Deferring Close before checking for a possible error"
   },
   {
     "patternId": "SA5002",
-    "title": "The empty for loop (for {}) spins and can block the scheduler",
-    "description": "The empty for loop (for {}) spins and can block the scheduler"
+    "title": "The empty for loop ('for {}') spins and can block the scheduler",
+    "description": "The empty for loop ('for {}') spins and can block the scheduler"
   },
   {
     "patternId": "SA5003",
@@ -461,8 +516,8 @@
   },
   {
     "patternId": "SA5004",
-    "title": "for { select { ... with an empty default branch spins",
-    "description": "for { select { ... with an empty default branch spins"
+    "title": "'for { select { ...' with an empty default branch spins",
+    "description": "'for { select { ...' with an empty default branch spins"
   },
   {
     "patternId": "SA5005",
@@ -493,6 +548,11 @@
     "patternId": "SA5011",
     "title": "Possible nil pointer dereference",
     "description": "Possible nil pointer dereference"
+  },
+  {
+    "patternId": "SA5012",
+    "title": "Passing odd-sized slice to function expecting even size",
+    "description": "Passing odd-sized slice to function expecting even size"
   },
   {
     "patternId": "SA6000",
@@ -543,6 +603,21 @@
     "patternId": "SA9005",
     "title": "Trying to marshal a struct with no public fields nor custom marshaling",
     "description": "Trying to marshal a struct with no public fields nor custom marshaling"
+  },
+  {
+    "patternId": "SA9006",
+    "title": "Dubious bit shifting of a fixed size integer value",
+    "description": "Dubious bit shifting of a fixed size integer value"
+  },
+  {
+    "patternId": "SA9007",
+    "title": "Deleting a directory that shouldn't be deleted",
+    "description": "Deleting a directory that shouldn't be deleted"
+  },
+  {
+    "patternId": "SA9008",
+    "title": "else branch of a type assertion is probably not reading the right value",
+    "description": "else branch of a type assertion is probably not reading the right value"
   },
   {
     "patternId": "ST1000",
@@ -628,5 +703,10 @@
     "patternId": "ST1022",
     "title": "The documentation of an exported variable or constant should start with variable's name",
     "description": "The documentation of an exported variable or constant should start with variable's name"
+  },
+  {
+    "patternId": "ST1023",
+    "title": "Redundant type in variable declaration",
+    "description": "Redundant type in variable declaration"
   }
 ]

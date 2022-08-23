@@ -105,6 +105,11 @@ curl -XPOST -L -H "project-token: $PROJECT_TOKEN" \
 
 `sbt assembly`
 
+##### Update Documentation
+
+Check if any new rules need to be added to the DocGenerator.
+`sbt doc-generator/run`
+
 ## What is Codacy?
 
 [Codacy](https://www.codacy.com/) is an Automated Code Review Tool that monitors your technical debt, helps you improve your code quality, teaches best practices to your developers, and helps you save time in Code Reviews.

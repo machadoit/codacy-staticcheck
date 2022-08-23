@@ -1,6 +1,6 @@
 {
   "name": "staticcheck",
-  "version": "2020.1.6",
+  "version": "2022.1.3",
   "patterns": [
     {
       "patternId": "S1000",
@@ -173,6 +173,11 @@
       "category": "CodeStyle"
     },
     {
+      "patternId": "S1040",
+      "level": "Info",
+      "category": "CodeStyle"
+    },
+    {
       "patternId": "SA1000",
       "level": "Info",
       "category": "CodeStyle"
@@ -313,6 +318,11 @@
       "category": "CodeStyle"
     },
     {
+      "patternId": "SA1030",
+      "level": "Info",
+      "category": "CodeStyle"
+    },
+    {
       "patternId": "SA2000",
       "level": "Error",
       "category": "ErrorProne"
@@ -443,6 +453,51 @@
       "category": "UnusedCode"
     },
     {
+      "patternId": "SA4023",
+      "level": "Info",
+      "category": "UnusedCode"
+    },
+    {
+      "patternId": "SA4024",
+      "level": "Info",
+      "category": "UnusedCode"
+    },
+    {
+      "patternId": "SA4025",
+      "level": "Info",
+      "category": "UnusedCode"
+    },
+    {
+      "patternId": "SA4026",
+      "level": "Info",
+      "category": "UnusedCode"
+    },
+    {
+      "patternId": "SA4027",
+      "level": "Info",
+      "category": "UnusedCode"
+    },
+    {
+      "patternId": "SA4028",
+      "level": "Info",
+      "category": "UnusedCode"
+    },
+    {
+      "patternId": "SA4029",
+      "level": "Info",
+      "category": "UnusedCode"
+    },
+    {
+      "patternId": "SA4030",
+      "level": "Info",
+      "category": "UnusedCode"
+    },
+    {
+      "patternId": "SA4031",
+      "level": "Info",
+      "category": "UnusedCode"
+    },
+    {
       "patternId": "SA5000",
       "level": "Warning",
       "category": "CodeStyle"
@@ -498,6 +553,11 @@
       "category": "CodeStyle"
     },
     {
+      "patternId": "SA5012",
+      "level": "Warning",
+      "category": "CodeStyle"
+    },
+    {
       "patternId": "SA6000",
       "level": "Warning",
       "category": "Performance"
@@ -544,6 +604,21 @@
     },
     {
       "patternId": "SA9005",
+      "level": "Error",
+      "category": "CodeStyle"
+    },
+    {
+      "patternId": "SA9006",
+      "level": "Error",
+      "category": "CodeStyle"
+    },
+    {
+      "patternId": "SA9007",
+      "level": "Error",
+      "category": "CodeStyle"
+    },
+    {
+      "patternId": "SA9008",
       "level": "Error",
       "category": "CodeStyle"
     },
@@ -629,6 +704,11 @@
     },
     {
       "patternId": "ST1022",
+      "level": "Info",
+      "category": "CodeStyle"
+    },
+    {
+      "patternId": "ST1023",
       "level": "Info",
       "category": "CodeStyle"
     }
