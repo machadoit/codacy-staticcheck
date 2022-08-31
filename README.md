@@ -1,15 +1,15 @@
 # codacy-staticcheck
 
-A standalone tool that converts [staticcheck](https://staticcheck.io/)
+A standalone tool that converts [Staticcheck](https://staticcheck.io/)
 diagnostics to Codacy's format.
 
-It allows running staticcheck either locally or as part of your CI process and then integrating the results into your Codacy workflow. This way, Codacy will present the results coming from staticcheck alongside all the other code quality information in the dashboards.
+It allows running Staticcheck either locally or as part of your CI process and then integrating the results into your Codacy workflow. This way, Codacy will present the results coming from Staticcheck alongside all the other code quality information in the dashboards.
 
 ## Usage
 
 ### Requirements
 
-To get your staticcheck results into Codacy you'll need to:
+To get your Staticcheck results into Codacy you'll need to:
 
 -   Enable Staticcheck on your repository **Code patterns** page
 -   Enable the setting **Run analysis through build server** on your repository **Settings**, tab **General**, **Repository analysis**
@@ -18,10 +18,10 @@ To get your staticcheck results into Codacy you'll need to:
 
 ### Sending the results to Codacy
 
-Sending the results of running staticcheck to Codacy involves the steps below, which you can automate in your CI build process:
+Sending the results of running Staticcheck to Codacy involves the steps below, which you can automate in your CI build process:
 
-1.  Run staticcheck using the json formatter
-2.  Convert the staticcheck output to a format that the Codacy API accepts
+1.  Run Staticcheck using the json formatter
+2.  Convert the Staticcheck output to a format that the Codacy API accepts
 3.  Send the results to Codacy
 4.  Finally, signal that Codacy can use the sent results and start a new analysis
 
