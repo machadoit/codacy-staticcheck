@@ -11,7 +11,8 @@ It allows running staticcheck either locally or as part of your CI process and t
 
 To get your staticcheck results into Codacy you'll need to:
 
--   Enable the setting “Run analysis through build server” under your repository Settings > General > Repository analysis
+-   Enable Staticcheck on your repository **Code patterns** page
+-   Enable the setting **Run analysis through build server** on your repository **Settings**, tab **General**, **Repository analysis**
 -   Obtain a [project API token](https://docs.codacy.com/codacy-api/api-tokens/#project-api-tokens)
 -   Download [codacy-staticcheck](https://github.com/codacy/codacy-staticcheck/releases)
 
