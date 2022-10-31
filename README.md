@@ -31,7 +31,7 @@ With script:
 export PROJECT_TOKEN="YOUR-TOKEN"
 export COMMIT="COMMIT-UUID"
 export CODACY_URL="CODACY-INSTALLATION-URL" # if not defined https://api.codacy.com will be used
-export CODACY_CLANG_TIDY_VERSION=0.2.3 # if not defined, latest will be used
+export CODACY_STATICCHECK_VERSION=0.2.3 # if not defined, latest will be used
 
 staticcheck -f json "<staticcheck-configs>" | \
 ./<codacy-staticcheck-path>/scripts/send-results.sh # requires a codacy-staticcheck-"<version>" in the current directory
