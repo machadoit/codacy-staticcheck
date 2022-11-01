@@ -25,6 +25,8 @@ Sending the results of running Staticcheck to Codacy involves the steps below, w
 3.  Send the results to Codacy
 4.  Finally, signal that Codacy can use the sent results and start a new analysis
 
+> When the option **“Run analysis through build server”** is enabled, the Codacy analysis will not start until you call the endpoint `/2.0/commit/{commitUuid}/resultsFinal` signalling that Codacy can use the sent results and start a new analysis.
+
 With script:
 
 ```bash
@@ -79,10 +81,6 @@ curl -XPOST -L -H "project-token: $PROJECT_TOKEN" \
 	-H "Content-type: application/json" \
 	"$CODACY_URL/2.0/commit/$COMMIT/resultsFinal"
 ```
-
-> When the option **“Run analysis through build server”** is enabled, the Codacy analysis will not start until you call the endpoint `/2.0/commit/{commitUuid}/resultsFinal` signalling that Codacy can use the sent results and start a new analysis.
-
-* * *
 
 ## Building
 
