@@ -68,7 +68,7 @@ workflows:
       - codacy/publish_s3:
           name: publish_s3
           path: bin/codacy-staticcheck
-          files: artifacts/codacy-staticcheck-$(cat .version),artifacts/codacy-staticcheck-$(cat .version).jar
+          files: artifacts/codacy-staticcheck-$(cat .version) artifacts/codacy-staticcheck-$(cat .version).jar
           filters:
             branches:
               only:
