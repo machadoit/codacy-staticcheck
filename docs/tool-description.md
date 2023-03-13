@@ -1,1 +1,1 @@
-Staticcheck is a state of the art linter for the Go programming language. Using static analysis, it finds bugs and performance issues, offers simplifications, and enforces style rules.
+Staticcheck is a state-of-the-art linter for the Go programming language. Using static analysis, it finds bugs and performance issues, offers simplifications, and enforces style rules. [Learn more](https://github.com/dominikh/go-tools)
