@@ -93,7 +93,6 @@ object DocGenerator {
       "SA6002",
       "SA6003",
       "SA6005",
-      "SA6006",
       "SA9001",
       "SA9002",
       "SA9003",
@@ -154,19 +153,7 @@ object DocGenerator {
       "ST1020",
       "ST1021",
       "ST1022",
-      "ST1023",
-      "QF1001",
-      "QF1002",
-      "QF1003",
-      "QF1004",
-      "QF1005",
-      "QF1006",
-      "QF1007",
-      "QF1008",
-      "QF1009",
-      "QF1010",
-      "QF1011",
-      "QF1012"
+      "ST1023"
     )
 
     val docs = file"docs"
