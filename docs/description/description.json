@@ -1,180 +1,5 @@
 [
   {
-    "patternId": "S1000",
-    "title": "Use plain channel send or receive instead of single-case select",
-    "description": "Use plain channel send or receive instead of single-case select"
-  },
-  {
-    "patternId": "S1001",
-    "title": "Replace for loop with call to copy",
-    "description": "Replace for loop with call to copy"
-  },
-  {
-    "patternId": "S1002",
-    "title": "Omit comparison with boolean constant",
-    "description": "Omit comparison with boolean constant"
-  },
-  {
-    "patternId": "S1003",
-    "title": "Replace call to strings.Index with strings.Contains",
-    "description": "Replace call to strings.Index with strings.Contains"
-  },
-  {
-    "patternId": "S1004",
-    "title": "Replace call to bytes.Compare with bytes.Equal",
-    "description": "Replace call to bytes.Compare with bytes.Equal"
-  },
-  {
-    "patternId": "S1005",
-    "title": "Drop unnecessary use of the blank identifier",
-    "description": "Drop unnecessary use of the blank identifier"
-  },
-  {
-    "patternId": "S1006",
-    "title": "Use 'for { ... }' for infinite loops",
-    "description": "Use 'for { ... }' for infinite loops"
-  },
-  {
-    "patternId": "S1007",
-    "title": "Simplify regular expression by using raw string literal",
-    "description": "Simplify regular expression by using raw string literal"
-  },
-  {
-    "patternId": "S1008",
-    "title": "Simplify returning boolean expression",
-    "description": "Simplify returning boolean expression"
-  },
-  {
-    "patternId": "S1009",
-    "title": "Omit redundant nil check on slices",
-    "description": "Omit redundant nil check on slices"
-  },
-  {
-    "patternId": "S1010",
-    "title": "Omit default slice index",
-    "description": "Omit default slice index"
-  },
-  {
-    "patternId": "S1011",
-    "title": "Use a single append to concatenate two slices",
-    "description": "Use a single append to concatenate two slices"
-  },
-  {
-    "patternId": "S1012",
-    "title": "Replace time.Now().Sub(x) with time.Since(x)",
-    "description": "Replace time.Now().Sub(x) with time.Since(x)"
-  },
-  {
-    "patternId": "S1016",
-    "title": "Use a type conversion instead of manually copying struct fields",
-    "description": "Use a type conversion instead of manually copying struct fields"
-  },
-  {
-    "patternId": "S1017",
-    "title": "Replace manual trimming with strings.TrimPrefix",
-    "description": "Replace manual trimming with strings.TrimPrefix"
-  },
-  {
-    "patternId": "S1018",
-    "title": "Use 'copy' for sliding elements",
-    "description": "Use 'copy' for sliding elements"
-  },
-  {
-    "patternId": "S1019",
-    "title": "Simplify 'make' call by omitting redundant arguments",
-    "description": "Simplify 'make' call by omitting redundant arguments"
-  },
-  {
-    "patternId": "S1020",
-    "title": "Omit redundant nil check in type assertion",
-    "description": "Omit redundant nil check in type assertion"
-  },
-  {
-    "patternId": "S1021",
-    "title": "Merge variable declaration and assignment",
-    "description": "Merge variable declaration and assignment"
-  },
-  {
-    "patternId": "S1023",
-    "title": "Omit redundant control flow",
-    "description": "Omit redundant control flow"
-  },
-  {
-    "patternId": "S1024",
-    "title": "Replace x.Sub(time.Now()) with time.Until(x)",
-    "description": "Replace x.Sub(time.Now()) with time.Until(x)"
-  },
-  {
-    "patternId": "S1025",
-    "title": "Don't use fmt.Sprintf(\"%s\", x) unnecessarily",
-    "description": "Don't use fmt.Sprintf(\"%s\", x) unnecessarily"
-  },
-  {
-    "patternId": "S1028",
-    "title": "Simplify error construction with fmt.Errorf",
-    "description": "Simplify error construction with fmt.Errorf"
-  },
-  {
-    "patternId": "S1029",
-    "title": "Range over the string directly",
-    "description": "Range over the string directly"
-  },
-  {
-    "patternId": "S1030",
-    "title": "Use bytes.Buffer.String or bytes.Buffer.Bytes",
-    "description": "Use bytes.Buffer.String or bytes.Buffer.Bytes"
-  },
-  {
-    "patternId": "S1031",
-    "title": "Omit redundant nil check around loop",
-    "description": "Omit redundant nil check around loop"
-  },
-  {
-    "patternId": "S1032",
-    "title": "Use sort.Ints(x), sort.Float64s(x), and sort.Strings(x)",
-    "description": "Use sort.Ints(x), sort.Float64s(x), and sort.Strings(x)"
-  },
-  {
-    "patternId": "S1033",
-    "title": "Unnecessary guard around call to 'delete'",
-    "description": "Unnecessary guard around call to 'delete'"
-  },
-  {
-    "patternId": "S1034",
-    "title": "Use result of type assertion to simplify cases",
-    "description": "Use result of type assertion to simplify cases"
-  },
-  {
-    "patternId": "S1035",
-    "title": "Redundant call to net/http.CanonicalHeaderKey in method call on net/http.Header",
-    "description": "Redundant call to net/http.CanonicalHeaderKey in method call on net/http.Header"
-  },
-  {
-    "patternId": "S1036",
-    "title": "Unnecessary guard around map access",
-    "description": "Unnecessary guard around map access"
-  },
-  {
-    "patternId": "S1037",
-    "title": "Elaborate way of sleeping",
-    "description": "Elaborate way of sleeping"
-  },
-  {
-    "patternId": "S1038",
-    "title": "Unnecessarily complex way of printing formatted string",
-    "description": "Unnecessarily complex way of printing formatted string"
-  },
-  {
-    "patternId": "S1039",
-    "title": "Unnecessary use of fmt.Sprint",
-    "description": "Unnecessary use of fmt.Sprint"
-  },
-  {
-    "patternId": "S1040",
-    "title": "Type assertion to current type",
-    "description": "Type assertion to current type"
-  },
-  {
     "patternId": "SA1000",
     "title": "Invalid regular expression",
     "description": "Invalid regular expression"
@@ -370,6 +195,11 @@
     "description": "The loop exits unconditionally after one iteration"
   },
   {
+    "patternId": "SA4005",
+    "title": "Field assignment that will never be observed. Did you mean to use a pointer receiver?",
+    "description": "Field assignment that will never be observed. Did you mean to use a pointer receiver?"
+  },
+  {
     "patternId": "SA4006",
     "title": "A value assigned to a variable is never read before being overwritten. Forgotten error check or dead code?",
     "description": "A value assigned to a variable is never read before being overwritten. Forgotten error check or dead code?"
@@ -421,8 +251,8 @@
   },
   {
     "patternId": "SA4017",
-    "title": "A pure function's return value is discarded, making the call pointless",
-    "description": "A pure function's return value is discarded, making the call pointless"
+    "title": "Discarding the return values of a function without side effects, making the call pointless",
+    "description": "Discarding the return values of a function without side effects, making the call pointless"
   },
   {
     "patternId": "SA4018",
@@ -618,6 +448,181 @@
     "patternId": "SA9008",
     "title": "else branch of a type assertion is probably not reading the right value",
     "description": "else branch of a type assertion is probably not reading the right value"
+  },
+  {
+    "patternId": "S1000",
+    "title": "Use plain channel send or receive instead of single-case select",
+    "description": "Use plain channel send or receive instead of single-case select"
+  },
+  {
+    "patternId": "S1001",
+    "title": "Replace for loop with call to copy",
+    "description": "Replace for loop with call to copy"
+  },
+  {
+    "patternId": "S1002",
+    "title": "Omit comparison with boolean constant",
+    "description": "Omit comparison with boolean constant"
+  },
+  {
+    "patternId": "S1003",
+    "title": "Replace call to strings.Index with strings.Contains",
+    "description": "Replace call to strings.Index with strings.Contains"
+  },
+  {
+    "patternId": "S1004",
+    "title": "Replace call to bytes.Compare with bytes.Equal",
+    "description": "Replace call to bytes.Compare with bytes.Equal"
+  },
+  {
+    "patternId": "S1005",
+    "title": "Drop unnecessary use of the blank identifier",
+    "description": "Drop unnecessary use of the blank identifier"
+  },
+  {
+    "patternId": "S1006",
+    "title": "Use 'for { ... }' for infinite loops",
+    "description": "Use 'for { ... }' for infinite loops"
+  },
+  {
+    "patternId": "S1007",
+    "title": "Simplify regular expression by using raw string literal",
+    "description": "Simplify regular expression by using raw string literal"
+  },
+  {
+    "patternId": "S1008",
+    "title": "Simplify returning boolean expression",
+    "description": "Simplify returning boolean expression"
+  },
+  {
+    "patternId": "S1009",
+    "title": "Omit redundant nil check on slices",
+    "description": "Omit redundant nil check on slices"
+  },
+  {
+    "patternId": "S1010",
+    "title": "Omit default slice index",
+    "description": "Omit default slice index"
+  },
+  {
+    "patternId": "S1011",
+    "title": "Use a single append to concatenate two slices",
+    "description": "Use a single append to concatenate two slices"
+  },
+  {
+    "patternId": "S1012",
+    "title": "Replace time.Now().Sub(x) with time.Since(x)",
+    "description": "Replace time.Now().Sub(x) with time.Since(x)"
+  },
+  {
+    "patternId": "S1016",
+    "title": "Use a type conversion instead of manually copying struct fields",
+    "description": "Use a type conversion instead of manually copying struct fields"
+  },
+  {
+    "patternId": "S1017",
+    "title": "Replace manual trimming with strings.TrimPrefix",
+    "description": "Replace manual trimming with strings.TrimPrefix"
+  },
+  {
+    "patternId": "S1018",
+    "title": "Use 'copy' for sliding elements",
+    "description": "Use 'copy' for sliding elements"
+  },
+  {
+    "patternId": "S1019",
+    "title": "Simplify 'make' call by omitting redundant arguments",
+    "description": "Simplify 'make' call by omitting redundant arguments"
+  },
+  {
+    "patternId": "S1020",
+    "title": "Omit redundant nil check in type assertion",
+    "description": "Omit redundant nil check in type assertion"
+  },
+  {
+    "patternId": "S1021",
+    "title": "Merge variable declaration and assignment",
+    "description": "Merge variable declaration and assignment"
+  },
+  {
+    "patternId": "S1023",
+    "title": "Omit redundant control flow",
+    "description": "Omit redundant control flow"
+  },
+  {
+    "patternId": "S1024",
+    "title": "Replace x.Sub(time.Now()) with time.Until(x)",
+    "description": "Replace x.Sub(time.Now()) with time.Until(x)"
+  },
+  {
+    "patternId": "S1025",
+    "title": "Don't use fmt.Sprintf(\"%s\", x) unnecessarily",
+    "description": "Don't use fmt.Sprintf(\"%s\", x) unnecessarily"
+  },
+  {
+    "patternId": "S1028",
+    "title": "Simplify error construction with fmt.Errorf",
+    "description": "Simplify error construction with fmt.Errorf"
+  },
+  {
+    "patternId": "S1029",
+    "title": "Range over the string directly",
+    "description": "Range over the string directly"
+  },
+  {
+    "patternId": "S1030",
+    "title": "Use bytes.Buffer.String or bytes.Buffer.Bytes",
+    "description": "Use bytes.Buffer.String or bytes.Buffer.Bytes"
+  },
+  {
+    "patternId": "S1031",
+    "title": "Omit redundant nil check around loop",
+    "description": "Omit redundant nil check around loop"
+  },
+  {
+    "patternId": "S1032",
+    "title": "Use sort.Ints(x), sort.Float64s(x), and sort.Strings(x)",
+    "description": "Use sort.Ints(x), sort.Float64s(x), and sort.Strings(x)"
+  },
+  {
+    "patternId": "S1033",
+    "title": "Unnecessary guard around call to 'delete'",
+    "description": "Unnecessary guard around call to 'delete'"
+  },
+  {
+    "patternId": "S1034",
+    "title": "Use result of type assertion to simplify cases",
+    "description": "Use result of type assertion to simplify cases"
+  },
+  {
+    "patternId": "S1035",
+    "title": "Redundant call to net/http.CanonicalHeaderKey in method call on net/http.Header",
+    "description": "Redundant call to net/http.CanonicalHeaderKey in method call on net/http.Header"
+  },
+  {
+    "patternId": "S1036",
+    "title": "Unnecessary guard around map access",
+    "description": "Unnecessary guard around map access"
+  },
+  {
+    "patternId": "S1037",
+    "title": "Elaborate way of sleeping",
+    "description": "Elaborate way of sleeping"
+  },
+  {
+    "patternId": "S1038",
+    "title": "Unnecessarily complex way of printing formatted string",
+    "description": "Unnecessarily complex way of printing formatted string"
+  },
+  {
+    "patternId": "S1039",
+    "title": "Unnecessary use of fmt.Sprint",
+    "description": "Unnecessary use of fmt.Sprint"
+  },
+  {
+    "patternId": "S1040",
+    "title": "Type assertion to current type",
+    "description": "Type assertion to current type"
   },
   {
     "patternId": "ST1000",
