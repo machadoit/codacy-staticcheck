@@ -52,7 +52,7 @@ workflows:
             branches:
               only:
                 - master
-          context: CodacyAWS
+          context: CodacyDocker
           requires:
             - plugins_test
       - codacy/publish_ghr:
