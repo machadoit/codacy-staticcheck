@@ -1,85 +1,51 @@
-import com.typesafe.sbt.packager.docker.{Cmd, ExecCmd}
+import com.typesafe.sbt.packager.docker.Cmd
 
 import scala.io.Source
 import scala.util.parsing.json.JSON
 
-organization := "codacy"
-
 name := "codacy-staticcheck"
 
-version := "1.0-SNAPSHOT"
-
-val languageVersion = "2.11.12"
-
-scalaVersion := languageVersion
-
-resolvers ++= Seq(
-  "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/releases",
-  "Typesafe Repo" at "http://repo.typesafe.com/typesafe/releases/"
-)
+ThisBuild / scalaVersion := "2.13.3"
 
 libraryDependencies ++= Seq(
-  "com.codacy" %% "codacy-engine-scala-seed" % "2.7.7" withSources(),
-  "org.scala-lang.modules" %% "scala-xml" % "1.0.4" withSources()
+  "com.codacy" %% "codacy-engine-scala-seed" % "4.0.0",
+  "org.scala-lang.modules" %% "scala-xml" % "1.2.0",
+  "com.lihaoyi" %% "ujson" % "1.2.2",
+  "org.scalatest" %% "scalatest" % "3.2.0" % Test
 )
 
-enablePlugins(JavaAppPackaging)
+val staticcheckVersion = "2022.1.3"
 
-enablePlugins(DockerPlugin)
+dependsOn(shared)
 
-version in Docker := "1.0"
+lazy val shared = project
+  .settings(libraryDependencies += "com.codacy" %% "codacy-analysis-cli-model" % "2.2.0")
 
-organization := "com.codacy"
-
-lazy val toolVersion = TaskKey[String]("Retrieve the version of the underlying tool from patterns.json")
-
-toolVersion := {
-  val jsonFile = (resourceDirectory in Compile).value / "docs" / "patterns.json"
-  val toolMap = JSON.parseFull(Source.fromFile(jsonFile).getLines().mkString)
-    .getOrElse(throw new Exception("patterns.json is not a valid json"))
-    .asInstanceOf[Map[String, String]]
-  toolMap.getOrElse[String]("version", throw new Exception("Failed to retrieve 'version' from patterns.json"))
-}
-
-def installAll(toolVersion: String) =
-  s"""apk update && apk add bash curl git &&
-     |export GOPATH=/opt/docker/go &&
-     |wget -qO- https://dl.google.com/go/go1.10.2.linux-amd64.tar.gz | tar xvz -C /usr/local &&
-     |/usr/local/go/bin/go get -u honnef.co/go/tools/cmd/staticcheck &&
-     |(cd $$GOPATH/src/honnef.co/go/tools && git checkout $toolVersion) &&
-     |/usr/local/go/bin/go get honnef.co/go/tools/cmd/staticcheck &&
-     |rm -rf /tmp/*""".stripMargin.replaceAll(System.lineSeparator(), " ")
-
-mappings in Universal <++= (resourceDirectory in Compile) map { (resourceDir: File) =>
-  val src = resourceDir / "docs"
-  val dest = "/docs"
-
-  for {
-    path <- (src ***).get
-    if !path.isDirectory
-  } yield path -> path.toString.replaceFirst(src.toString, dest)
-}
-
-val dockerUser = "docker"
-val dockerGroup = "docker"
-
-daemonUser in Docker := dockerUser
-
-daemonGroup in Docker := dockerGroup
-
-dockerBaseImage := "develar/java"
-
-mainClass in Compile := Some("codacy.Engine")
-
-dockerCommands := {
-  dockerCommands.dependsOn(toolVersion).value.flatMap {
-    case cmd@(Cmd("ADD", _)) => List(
-      Cmd("RUN", "adduser -u 2004 -D docker"),
-      cmd,
-      Cmd("RUN", installAll(toolVersion.value)),
-      Cmd("RUN", "mv /opt/docker/docs /docs"),
-      ExecCmd("RUN", Seq("chown", "-R", s"$dockerUser:$dockerGroup", "/docs"): _*)
+lazy val `doc-generator` = project
+  .settings(
+    Compile / sourceGenerators += Def.task {
+      val file = (Compile / sourceManaged).value / "codacy" / "staticcheck" / "Versions.scala"
+      IO.write(file, s"""package com.codacy.staticcheck
+                        |object Versions {
+                        |  val staticcheckVersion: String = "$staticcheckVersion"
+                        |}
+                        |""".stripMargin)
+      Seq(file)
+    }.taskValue,
+    libraryDependencies ++= Seq(
+      "com.github.pathikrit" %% "better-files" % "3.9.1",
+      "com.lihaoyi" %% "ujson" % "1.2.2",
     )
-    case other => List(other)
-  }
-}
+  )
+  .dependsOn(shared)
+
+enablePlugins(NativeImagePlugin)
+
+nativeImageOptions ++= Seq(
+  "-O1",
+  "-H:+ReportExceptionStackTraces",
+  "--no-fallback",
+  "--no-server",
+  "--report-unsupported-elements-at-runtime",
+  "--static"
+)

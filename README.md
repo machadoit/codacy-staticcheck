@@ -1,62 +1,126 @@
-# Codacy Staticcheck
+# codacy-staticcheck
 
-This is the docker engine we use at Codacy to have [Staticcheck](https://github.com/dominikh/go-tools/tree/master/cmd/staticcheck) support.
-You can also create a docker to integrate the tool and language of your choice!
-Check the **Docs** section for more information.
+A standalone tool that converts [staticcheck](https://staticcheck.io/)
+diagnostics to Codacy's format.
 
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/c39deb935fd544d4bbc6e833c7f21da3)](https://www.codacy.com/app/machadoit/codacy-staticcheck?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=machadoit/codacy-staticcheck&amp;utm_campaign=Badge_Grade)
+It allows running staticcheck either locally or as part of your CI process and then integrating the results into your Codacy workflow. This way, Codacy will present the results coming from staticcheck alongside all the other code quality information in the dashboards.
 
 ## Usage
 
-You can create the docker by doing:
+### Requirements
+
+To get your staticcheck results into Codacy you'll need to:
+
+-   Enable the setting “Run analysis through build server” under your repository Settings > General > Repository analysis
+-   Obtain a [project API token](https://docs.codacy.com/codacy-api/api-tokens/#project-api-tokens)
+-   Download [codacy-staticcheck](https://github.com/codacy/codacy-staticcheck/releases)
+
+### Sending the results to Codacy
+
+Sending the results of running staticcheck to Codacy involves the steps below, which you can automate in your CI build process:
+
+1.  Run staticcheck using the json formatter
+2.  Convert the staticcheck output to a format that the Codacy API accepts
+3.  Send the results to Codacy
+4.  Finally, signal that Codacy can use the sent results and start a new analysis
+
+With script:
 
 ```bash
-sbt docker:publishLocal
+export PROJECT_TOKEN="YOUR-TOKEN"
+export COMMIT="COMMIT-UUID"
+export CODACY_URL="CODACY-INSTALLATION-URL" # if not defined https://api.codacy.com will be used
+export CODACY_CLANG_TIDY_VERSION=0.2.3 # if not defined, latest will be used
+
+staticcheck -f json "<staticcheck-configs>" | \
+./<codacy-staticcheck-path>/scripts/send-results.sh # requires a codacy-staticcheck-"<version>" in the current directory
 ```
 
-The docker is ran with the following command:
+Without script (step-by-step):
 
 ```bash
-docker run -it -v $srcDir:/src  <DOCKER_NAME>:<DOCKER_VERSION>
+export PROJECT_TOKEN="YOUR-TOKEN"
+export COMMIT="COMMIT-UUID"
+
+# 1. Run staticcheck
+staticcheck -f json "<staticcheck-configs>" | \
+# 2. Convert the staticcheck output to a format that the Codacy API accepts
+./codacy-staticcheck-"<version>" | \
+# 3. Send the results to Codacy
+curl -XPOST -L -H "project-token: $PROJECT_TOKEN" \
+    -H "Content-type: application/json" -d @- \
+    "https://api.codacy.com/2.0/commit/$COMMIT/issuesRemoteResults"
+
+# 4. Signal that Codacy can use the sent results and start a new analysis
+curl -XPOST -L -H "project-token: $PROJECT_TOKEN" \
+	-H "Content-type: application/json" \
+	"https://api.codacy.com/2.0/commit/$COMMIT/resultsFinal"
 ```
 
-## Docs
+For self-hosted installations:
 
-[Tool Developer Guide](https://support.codacy.com/hc/en-us/articles/207994725-Tool-Developer-Guide)
+```bash
+export PROJECT_TOKEN="YOUR-TOKEN"
+export COMMIT="COMMIT-UUID"
+export CODACY_URL="CODACY-INSTALLATION-URL"
 
-[Tool Developer Guide - Using Scala](https://support.codacy.com/hc/en-us/articles/207280379-Tool-Developer-Guide-Using-Scala)
+# 1. Run staticcheck
+staticcheck -f json "<staticcheck-configs>" | \
+# 2. Convert the staticcheck output to a format that the Codacy API accepts
+./codacy-staticcheck-"<version>" | \
+# 3. Send the results to Codacy
+curl -XPOST -L -H "project-token: $PROJECT_TOKEN" \
+    -H "Content-type: application/json" -d @- \
+    "$CODACY_URL/2.0/commit/$COMMIT/issuesRemoteResults"
 
-## Test
-
-We use the [codacy-plugins-test](https://github.com/codacy/codacy-plugins-test) to test our external tools integration.
-You can follow the instructions there to make sure your tool is working as expected.
-
-## Generate Docs
-
-Make sure that you have the ```raw-docs``` for the version that you want to target.
-For example, to generate documentation for version ```2017.2.2```, the underlying tool documentation must be available at ```src/main/resources/raw-docks/2017.2.2```.
-
-Using the version ```2017.2.2``` as example, you should copy all the files
-from ```https://github.com/dominikh/go-tools/tree/2017.2.2/cmd/staticcheck/docs/checks```
-to the ```src/main/resources/raw-docks/2017.2.2```.
-
-As long as the ```raw-docs``` are available, running the command above will generate the ```patterns.json``` and ```description.json```:
-
-```sh
-sbt "run-main codacy.staticcheck.DocGenerator <version-of-the-tool>"
+# 4. Signal that Codacy can use the sent results and start a new analysis
+curl -XPOST -L -H "project-token: $PROJECT_TOKEN" \
+	-H "Content-type: application/json" \
+	"$CODACY_URL/2.0/commit/$COMMIT/resultsFinal"
 ```
 
-## What is Codacy
+> When the option **“Run analysis through build server”** is enabled, the Codacy analysis will not start until you call the endpoint `/2.0/commit/{commitUuid}/resultsFinal` signalling that Codacy can use the sent results and start a new analysis.
+
+* * *
+
+## Building
+
+##### Compile
+
+`sbt compile`
+
+##### Format
+
+`sbt scalafmt test:scalafmt sbt:scalafmt`
+
+##### Tests
+
+`sbt test`
+
+##### Build native image (requires docker)
+
+`sbt "graalvm-native-image:packageBin"`
+
+##### Build fat-jar
+
+`sbt assembly`
+
+##### Update Documentation
+
+Check if any new rules need to be added to the DocGenerator.
+`sbt doc-generator/run`
+
+## What is Codacy?
 
 [Codacy](https://www.codacy.com/) is an Automated Code Review Tool that monitors your technical debt, helps you improve your code quality, teaches best practices to your developers, and helps you save time in Code Reviews.
 
-### Among Codacy’s features
+### Among Codacy’s features:
 
-- Identify new Static Analysis issues
-- Commit and Pull Request Analysis with GitHub, BitBucket/Stash, GitLab (and also direct git repositories)
-- Auto-comments on Commits and Pull Requests
-- Integrations with Slack, HipChat, Jira, YouTrack
-- Track issues in Code Style, Security, Error Proneness, Performance, Unused Code and other categories
+-   Identify new Static Analysis issues
+-   Commit and Pull Request Analysis with GitHub, BitBucket/Stash, GitLab (and also direct git repositories)
+-   Auto-comments on Commits and Pull Requests
+-   Integrations with Slack, HipChat, Jira, YouTrack
+-   Track issues Code Style, Security, Error Proneness, Performance, Unused Code and other categories
 
 Codacy also helps keep track of Code Coverage, Code Duplication, and Code Complexity.
 
